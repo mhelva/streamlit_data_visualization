@@ -15,9 +15,23 @@ def info_table(dataframe):
     dtype = dataframe.dtypes
     info_df = pd.concat([n_miss, np.round(ratio, 2), unique_count, dtype],
                         axis=1, keys=['missing_values', 'missing_ratio', 'unique_values', 'dtype'])
-    #info_df.reset_index()
     return info_df.reset_index().rename(columns={"index": "column_name"})
 
+def grab_col_names(dataframe, cat_th=10, car_th=20):
+    # cat_cols, cat_but_car
+    cat_cols = [col for col in dataframe.columns if dataframe[col].dtypes == "O"]
+    num_but_cat = [col for col in dataframe.columns if dataframe[col].nunique() < cat_th and
+                   dataframe[col].dtypes != "O"]
+    cat_but_car = [col for col in dataframe.columns if dataframe[col].nunique() > car_th and
+                   dataframe[col].dtypes == "O"]
+    cat_cols = cat_cols + num_but_cat
+    cat_cols = [col for col in cat_cols if col not in cat_but_car]
+
+    # num_cols
+    num_cols = [col for col in dataframe.columns if dataframe[col].dtypes != "O"]
+    num_cols = [col for col in num_cols if col not in num_but_cat]
+
+    return cat_cols, num_cols, cat_but_car
 
 # Sidebar Controls and Main App
 st.sidebar.title("📁 Upload CSV")
@@ -49,17 +63,19 @@ if uploaded_file:
         #  Visualizations Tab
         with tab2:
             st.subheader("Choose Plot Type")
-            numeric_cols = df.select_dtypes(include=np.number).columns.tolist()
+            #numeric_cols = df.select_dtypes(include=np.number).columns.tolist()
             all_cols = df.columns.tolist()
-
+            cat_cols, num_cols, cat_but_car = grab_col_names(df)
             plot_type = st.radio("For histogram, distribution and pie plot, select only **X-axis** column.",
                                  ["Line", "Histogram", "Distribution", "Boxplot", "Violinplot",
                                    "Scatter", "Pie"])
             st.subheader("Select Columns to Plot")
-            if plot_type in ["Histogram", "Distribution", "Pie"]:
-                x_col = st.selectbox("X-axis", options=all_cols)
+            if plot_type == "Pie":
+                x_col = st.selectbox("X-axis", options=cat_cols)
                 y_col = None
-
+            elif plot_type in ["Histogram", "Distribution"]:
+                x_col = st.selectbox("X-axis", options=cat_cols+num_cols)
+                y_col = None
             else:
                 x_col = st.selectbox("X-axis", options=all_cols)
                 y_col = st.selectbox("Y-axis", options=all_cols)
@@ -92,7 +108,7 @@ if uploaded_file:
                     ax.set_ylabel(y_col)
 
                 elif plot_type == "Distribution":
-                    sns.distplot(df[x_col], bins=50, kde=True, ax=ax, color="blue")
+                    sns.distplot(df[x_col], bins=50, kde=True, ax=ax)
                     ax.set_title(f"Distribution of {x_col}")
                     ax.set_xlabel(x_col)
                     ax.set_ylabel("Density")
