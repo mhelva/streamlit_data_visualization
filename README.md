@@ -2,7 +2,7 @@ https://mhelva-datavisualization.streamlit.app/
 
 # 📊 CSV Visualizer Web App
 
-This is a simple Streamlit app that lets you upload a CSV and generate plots, summaries, and more!
+This is a simple Streamlit app that lets you upload a csv file and generate plots, summaries, and more!
 
 ## 🚀 Try it Live
 Deployed via Streamlit Community Cloud
