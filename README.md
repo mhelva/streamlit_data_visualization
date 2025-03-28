@@ -9,5 +9,5 @@ Deployed via Streamlit Community Cloud
 
 ```bash
 pip install -r requirements.txt
-streamlit run enhanced_app.py
+streamlit run streamlit_data_app.py
 ```
