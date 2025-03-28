@@ -4,7 +4,7 @@ import seaborn as sns
 import numpy as np
 import streamlit as st
 
-sns.set_style("whitegrid")
+sns.set_style("white")
 
 
 def info_table(dataframe):
@@ -49,10 +49,16 @@ if uploaded_file:
             numeric_cols = df.select_dtypes(include=np.number).columns.tolist()
             all_cols = df.columns.tolist()
 
-            x_col = st.selectbox("X-axis", options=all_cols)
-            y_col = st.selectbox("Y-axis", options=all_cols)
             plot_type = st.radio("Choose Plot Type", ["Line", "Histogram", "Distribution", "Scatter", "Pie"])
 
+            if plot_type in ["Histogram", "Distribution", "Pie"]:
+                y_col = st.selectbox("Y-axis", options=all_cols)
+                x_col = None  # x_col is not used
+                st.info("This plot uses only the **Y-axis** column. X-axis is ignored.")
+            else:
+                x_col = st.selectbox("X-axis", options=all_cols)
+                y_col = st.selectbox("Y-axis", options=all_cols)
+                
             if st.button("Generate Plot"):
                 fig, ax = plt.subplots(figsize=(12, 8))
 
