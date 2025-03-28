@@ -92,7 +92,7 @@ if uploaded_file:
                     ax.set_ylabel(y_col)
 
                 elif plot_type == "Distribution":
-                    sns.distplot(df[x_col], bins=50, kde=True, ax=ax, color="blue")
+                    sns.distplot(df[x_col], bins=50, kde=True, ax=ax)
                     ax.set_title(f"Distribution of {x_col}")
                     ax.set_xlabel(x_col)
                     ax.set_ylabel("Density")
