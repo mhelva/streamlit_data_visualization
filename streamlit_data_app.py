@@ -5,7 +5,7 @@ import numpy as np
 import streamlit as st
 
 sns.set_style("whitegrid")
-st.set_option('deprecation.showPyplotGlobalUse', False)
+#st.set_option('deprecation.showPyplotGlobalUse', False)
 
 
 def info_table(dataframe):
