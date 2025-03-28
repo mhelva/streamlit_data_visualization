@@ -4,8 +4,8 @@ import seaborn as sns
 import numpy as np
 import streamlit as st
 
-#sns.set_style("whitegrid")
-st.set_option('deprecation.showPyplotGlobalUse', False)
+sns.set_style("whitegrid")
+
 
 def info_table(dataframe):
     n_miss = dataframe.isnull().sum().sort_values(ascending=False)
