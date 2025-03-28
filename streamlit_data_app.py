@@ -54,35 +54,39 @@ if uploaded_file:
             plot_type = st.radio("Choose Plot Type", ["Line", "Histogram", "Distribution", "Scatter", "Pie"])
 
             if st.button("Generate Plot"):
-                plt.figure(figsize=(12, 8))
+                fig, ax = plt.subplots(figsize=(12, 8))
 
                 if plot_type == "Line":
-                    plt.plot(df[x_col], df[y_col])
-                    plt.xlabel(x_col)
-                    plt.ylabel(y_col)
-                    plt.title(f"{y_col} vs {x_col}")
+                    ax.plot(df[x_col], df[y_col])
+                    ax.set_xlabel(x_col)
+                    ax.set_ylabel(y_col)
+                    ax.set_title(f"{y_col} vs {x_col}")
 
                 elif plot_type == "Histogram":
-                    plt.hist(df[y_col], bins=50)
-                    plt.title(f"Histogram of {y_col}")
+                    ax.hist(df[y_col], bins=50)
+                    ax.set_title(f"Histogram of {y_col}")
+                    ax.set_xlabel(y_col)
+                    ax.set_ylabel("Frequency")
 
                 elif plot_type == "Distribution":
-                    sns.histplot(df[y_col], bins=30, kde=True)
-                    plt.title(f"Distribution of {y_col}")
+                    sns.histplot(df[y_col], bins=30, kde=True, ax=ax)
+                    ax.set_title(f"Distribution of {y_col}")
+                    ax.set_xlabel(y_col)
+                    ax.set_ylabel("Density")
 
                 elif plot_type == "Scatter":
-                    plt.scatter(df[x_col], df[y_col])
-                    plt.xlabel(x_col)
-                    plt.ylabel(y_col)
-                    plt.title(f"Scatter Plot: {y_col} vs {x_col}")
+                    ax.scatter(df[x_col], df[y_col])
+                    ax.set_xlabel(x_col)
+                    ax.set_ylabel(y_col)
+                    ax.set_title(f"Scatter Plot: {y_col} vs {x_col}")
 
                 elif plot_type == "Pie":
                     counts = df[y_col].value_counts()
-                    plt.pie(counts, labels=counts.index, autopct='%1.1f%%')
-                    plt.title(f"Pie Chart of {y_col}")
+                    fig, ax = plt.subplots(figsize=(8, 8))  # override fig, ax for pie chart (square is better)
+                    ax.pie(counts, labels=counts.index, autopct='%1.1f%%')
+                    ax.set_title(f"Pie Chart of {y_col}")
 
-                st.pyplot()
-
+                st.pyplot(fig)
 
     except Exception as e:
         st.error(f"Error loading file: {e}")
