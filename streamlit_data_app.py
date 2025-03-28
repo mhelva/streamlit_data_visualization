@@ -62,7 +62,7 @@ if uploaded_file:
             if st.button("Generate Plot"):
                 fig, ax = plt.subplots(figsize=(12, 8))
 
-                if plot_type == "Line":
+                if plot_type == "Line" and x_col:
                     ax.plot(df[x_col], df[y_col])
                     ax.set_xlabel(x_col)
                     ax.set_ylabel(y_col)
@@ -80,7 +80,7 @@ if uploaded_file:
                     ax.set_xlabel(y_col)
                     ax.set_ylabel("Density")
 
-                elif plot_type == "Scatter":
+                elif plot_type == "Scatter" and x_col:
                     ax.scatter(df[x_col], df[y_col])
                     ax.set_xlabel(x_col)
                     ax.set_ylabel(y_col)
